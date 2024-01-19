@@ -10,6 +10,7 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+
 import { promises } from 'dns';
 import { User } from './entities/user.entity';
 
@@ -23,7 +24,8 @@ export class UsersController {
   }
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  create(@Body() createUserDto: CreateUserDto): Promise<User> {
+    const userdata = this.usersService.create(createUserDto);
     return this.usersService.create(createUserDto);
   }
 
