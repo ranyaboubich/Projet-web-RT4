@@ -11,17 +11,17 @@ export class UsersService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
   ) {}
-  create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const user = this.usersRepository.create(createUserDto);
     return this.usersRepository.save(user);
   }
 
-  findAll(): Promise<User[]> {
+  async findAll(): Promise<User[]> {
     return this.usersRepository.find();
   }
 
-  findOne(id: number): Promise<User> {
-    return this.usersRepository.findOne(id);
+  async findOne(id: number): Promise<User> {
+    return this.usersRepository.findOne({ where: { id: id } });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<void> {

@@ -2,5 +2,12 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AuthService {
-  login(user: User) {}
+
+    constructor(
+        private Repository<User>
+    ){
+    }
+  async login(user: UserSubsrcibeDto) {
+
+  }
 }
