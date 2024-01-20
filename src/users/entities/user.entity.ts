@@ -9,13 +9,11 @@ export class User {
     length: 20,
     unique: true,
   })
-  @IsString()
   username: string;
 
   @Column({
     unique: true,
   })
-  @IsEmail()
   email: string;
 
   @Column()

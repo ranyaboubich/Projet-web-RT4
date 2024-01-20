@@ -10,7 +10,6 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-
 import { promises } from 'dns';
 import { User } from './entities/user.entity';
 
@@ -19,13 +18,12 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  async findAll(): Promise<User[]> {
+  findAll() {
     return this.usersService.findAll();
   }
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto): Promise<User> {
-    const userdata = this.usersService.create(createUserDto);
+  create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
