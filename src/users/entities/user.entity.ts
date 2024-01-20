@@ -18,8 +18,10 @@ export class User {
 
   @Column()
   password: string;
+
   @Column()
   salt: string;
 
-  // @Column({type: 'enum', enum:UserRoleEnum, default: UserRoleEnum.User}) role: string;
+  @Column()
+  user: boolean;
 }
