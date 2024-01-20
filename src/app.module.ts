@@ -6,9 +6,31 @@ import { AdminModule } from './admin/admin.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { BooksModule } from './books/books.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+//import * as process from 'process';
+import { config } from 'dotenv';
+import * as process from 'process';
+config();
 
 @Module({
-  imports: [BooksModule, AdminModule, UsersModule, AuthModule],
+  imports: [
+    BooksModule,
+    AdminModule,
+    UsersModule,
+    AuthModule,
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: process.env.DB_HOST,
+      port: 3306,
+      username: process.env.DB,
+      password: process.env.DB_PASS,
+      database: process.env.DB,
+      //entities: ['dist/**/*.entity{.ts,.js}'],
+      autoLoadEntities: true,
+      synchronize: true,
+      logging: true,
+    }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
