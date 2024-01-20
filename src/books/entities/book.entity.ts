@@ -1,6 +1,7 @@
 import { isNotEmpty } from 'class-validator';
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
+@Entity()
 export class Book {
   @PrimaryGeneratedColumn()
   id: number;
@@ -14,6 +15,6 @@ export class Book {
   category: string;
   @Column()
   author: string;
-  @Column()
+  @Column("simple-array")
   keywords: string[];
 }

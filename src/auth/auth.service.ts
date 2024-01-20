@@ -5,11 +5,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { LoginDto } from '../users/dto/login.dto';
+import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private UserRepository: Repository<User>,
+    private jwtService: JwtService,
   ) {}
   async signIn(userData: CreateUserDto): Promise<Partial<User>> {
     //The create() method takes an object representing the properties of the entity.
@@ -40,7 +42,7 @@ export class AuthService {
       password: user.password,
     };
   }
-  async login(credentials: LoginDto): Promise<Partial<User>>{
+  async login(credentials: LoginDto) {
     // recuperer le login et le mot de passe
     const {email, password} = credentials;
     //login using email and password
@@ -54,10 +56,14 @@ export class AuthService {
     }
     const hashed = await bcrypt.hash(password, user.salt);
     if (hashed === user.password){
-      return {
+      const payload = {
         username :user.username,
         email: user.email,
       }
+      const jwt = await this.jwtService.sign(payload);
+      return {
+        "access_token": jwt
+      };
     } else {
       throw new NotFoundException('email or password incorrect');
     }

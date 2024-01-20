@@ -22,7 +22,7 @@ export class AuthController {
   @Post('login')
   async login(
     @Body() credentials: LoginDto
-  ): Promise<Partial<User>>{
+  ){
     return this.authService.login(credentials);
   }
 
