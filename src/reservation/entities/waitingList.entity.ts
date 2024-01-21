@@ -4,9 +4,8 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   CreateDateColumn,
-  OneToOne, Entity,
+  Entity,
 } from 'typeorm';
-
 @Entity()
 export class WaitingList {
   @PrimaryGeneratedColumn()
