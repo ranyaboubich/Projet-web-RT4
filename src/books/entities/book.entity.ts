@@ -1,7 +1,8 @@
 import { Reservation } from 'src/reservation/entities/reservation.entity';
 import { WaitingList } from 'src/reservation/entities/waitingList.entity';
-import { Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, OneToMany, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
+@Entity()
 export class Book {
   @PrimaryGeneratedColumn()
   id: number;
@@ -15,7 +16,7 @@ export class Book {
   category: string;
   @Column()
   author: string;
-  @Column()
+  @Column('simple-array')
   keywords: string[];
   @Column()
   instances: number;

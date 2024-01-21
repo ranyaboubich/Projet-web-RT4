@@ -1,7 +1,8 @@
 import { Reservation } from 'src/reservation/entities/reservation.entity';
 import { WaitingList } from 'src/reservation/entities/waitingList.entity';
-import { Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, OneToMany, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
+@Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -14,17 +15,18 @@ export class User {
 
   @Column({
     unique: true,
+    nullable: false,
   })
   email: string;
 
-  @Column()
+  @Column({ nullable: false })
   password: string;
 
   @Column()
   salt: string;
 
-  @Column()
-  admin: boolean;
+  @Column({ nullable: true })
+  isAdmin: boolean;
 
   @OneToMany(() => Reservation, (reservation) => reservation.user)
   reservations: Reservation[];
