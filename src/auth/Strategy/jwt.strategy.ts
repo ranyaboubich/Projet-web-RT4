@@ -1,6 +1,6 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PayloadInterface } from '../Interface/payload.interface';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -24,6 +24,18 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: PayloadInterface ) {
-    //const user = await this.userRepository.findOne({ username: payload.username } );
+    const user = await this.userRepository.findOne({ where: { username: payload.username } });
+    // si le user existe je le retourne et la automatiquement ce que je retourne est stocké dans le request
+    if (user){
+      //const {password, salt, ...result} = user;
+      //return result;
+      delete user.salt;
+      delete user.password;
+      return user;
+      // si le user n'existe pas je retourne une erreur
+    } else {
+      throw new UnauthorizedException();
+    }
+
   }
 }

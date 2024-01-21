@@ -12,16 +12,22 @@ export class Book {
     unique: true,
   })
   title: string;
+
   @Column()
   category: string;
+
   @Column()
   author: string;
+
   @Column('simple-array')
   keywords: string[];
+
   @Column()
   instances: number;
+
   @OneToMany(() => Reservation, (reservation) => reservation.book)
   reservations: Reservation[];
+
   @OneToMany(() => WaitingList, (waitingList) => waitingList.book)
   waitingLists: WaitingList[];
 }

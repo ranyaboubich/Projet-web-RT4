@@ -5,18 +5,26 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
+  Delete, UseGuards, Req,
 } from '@nestjs/common';
 import { ReservationService } from './reservation.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
+import { User } from '../Decorators/user.decorator';
+import { JwtAuthGuard } from '../auth/Guards/jwt-auth.guard';
 
 @Controller('reservation')
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) {}
 
   @Post()
-  create(@Body() createReservationDto: CreateReservationDto) {
+  @UseGuards(JwtAuthGuard)
+  create(
+    @Body() createReservationDto: CreateReservationDto,
+    @User() user,
+    @Req() request: Request,
+  ) {
+    const book = request['book'];
     return this.reservationService.create(createReservationDto);
   }
 
@@ -39,6 +47,7 @@ export class ReservationController {
   }
 
   @Delete(':id')
+  //@User() user
   remove(@Param('id') id: string) {
     return this.reservationService.remove(+id);
   }

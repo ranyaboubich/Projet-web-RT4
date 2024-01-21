@@ -47,7 +47,7 @@ export class AuthService {
     const {email, password} = credentials;
     //login using email and password
     const user = await this.UserRepository.createQueryBuilder("user")
-      .where("user.email = :email ",// si on veut logger avec le username on ajoute user.username= :email
+      .where("user.email = :email or user.username = :email",// si on veut logger avec le username on ajoute user.username= :email
         {email}
         )
       .getOne()
@@ -59,6 +59,7 @@ export class AuthService {
       const payload = {
         username :user.username,
         email: user.email,
+        isAdmin: user.isAdmin
       }
       const jwt = await this.jwtService.sign(payload);
       return {

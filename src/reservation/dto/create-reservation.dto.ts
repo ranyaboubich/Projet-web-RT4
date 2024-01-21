@@ -1,1 +1,3 @@
-export class CreateReservationDto {}
+export class CreateReservationDto {
+
+}
