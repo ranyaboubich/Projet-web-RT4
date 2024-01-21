@@ -25,7 +25,8 @@ export class ReservationController {
     @Req() request: Request,
   ) {
     const book = request['book'];
-    return this.reservationService.create(createReservationDto);
+    console.log('le book dans ce request est', book);
+    //return this.reservationService.create(createReservationDto);
   }
 
   @Get()
