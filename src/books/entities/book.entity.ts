@@ -1,5 +1,6 @@
-import { isNotEmpty } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Reservation } from 'src/reservation/entities/reservation.entity';
+import { WaitingList } from 'src/reservation/entities/waitingList.entity';
+import { Column, OneToMany, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Book {
@@ -15,6 +16,12 @@ export class Book {
   category: string;
   @Column()
   author: string;
-  @Column("simple-array")
+  @Column('simple-array')
   keywords: string[];
+  @Column()
+  instances: number;
+  @OneToMany(() => Reservation, (reservation) => reservation.book)
+  reservations: Reservation[];
+  @OneToMany(() => WaitingList, (waitingList) => waitingList.book)
+  waitingLists: WaitingList[];
 }

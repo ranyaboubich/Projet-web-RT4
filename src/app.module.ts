@@ -6,8 +6,8 @@ import { AdminModule } from './admin/admin.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { BooksModule } from './books/books.module';
+import { ReservationModule } from './reservation/reservation.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
 
 @Module({
   imports: [
@@ -15,6 +15,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     AdminModule,
     UsersModule,
     AuthModule,
+    ReservationModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
