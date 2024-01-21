@@ -21,9 +21,7 @@ export class UsersController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  findAll(@Req() request: Request) {
-    const user = request['user'];
-    console.log('le user dans ce request est', user);
+  findAll() {
     return this.usersService.findAll();
   }
 
