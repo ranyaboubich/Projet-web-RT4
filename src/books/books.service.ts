@@ -4,12 +4,18 @@ import { UpdateBookDto } from './dto/update-book.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Book } from './entities/book.entity';
 import { Repository } from 'typeorm';
+import { Reservation } from 'src/reservation/entities/reservation.entity';
+import { WaitingList } from 'src/reservation/entities/waitingList.entity';
 
 @Injectable()
 export class BooksService {
   constructor(
     @InjectRepository(Book)
     private booksRepository: Repository<Book>,
+    @InjectRepository(Reservation)
+    private reservationRepository: Repository<Reservation>,
+    @InjectRepository(WaitingList)
+    private waitingListRepository: Repository<WaitingList>,
   ) {}
   async create(createBookDto: CreateBookDto): Promise<Book> {
     const book = this.booksRepository.create(createBookDto);
@@ -26,6 +32,24 @@ export class BooksService {
 
   async update(id: number, updateBookDto: UpdateBookDto): Promise<void> {
     await this.booksRepository.update(id, updateBookDto);
+    if (updateBookDto.instances) {
+      //get waitinglist sorted by joinedAt limited by the number of instances
+      const waitingList = await this.waitingListRepository.find({
+        where: { book: { id: id } },
+        order: { joinedAt: 'ASC' },
+        take: updateBookDto.instances,
+      });
+      //create reservation for the waitingList and remove from waitingList
+      waitingList.forEach(async (waiting) => {
+        const reservation = this.reservationRepository.create({
+          book: { id: id },
+          user: { id: waiting.user.id },
+          reservedAt: new Date(),
+        });
+        await this.reservationRepository.save(reservation);
+        await this.waitingListRepository.delete(waiting.id);
+      });
+    }
   }
 
   async remove(id: number): Promise<void> {

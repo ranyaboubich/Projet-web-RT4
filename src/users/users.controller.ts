@@ -5,12 +5,15 @@ import {
   Body,
   Patch,
   Param,
-  Delete, UseGuards, Req,
+  Delete,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from '../auth/Guards/jwt-auth.guard';
+import { User } from 'src/Decorators/user.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -18,17 +21,10 @@ export class UsersController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  findAll(
-    @Req() request: Request
-  ) {
+  findAll(@Req() request: Request) {
     const user = request['user'];
     console.log('le user dans ce request est', user);
     return this.usersService.findAll();
-  }
-
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -37,9 +33,10 @@ export class UsersController {
     return this.usersService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  @UseGuards(JwtAuthGuard)
+  @Patch()
+  update(@Body() updateUserDto: UpdateUserDto, @User() user) {
+    return this.usersService.update(user.id, updateUserDto); //only user can update itself
   }
 
   @UseGuards(JwtAuthGuard)

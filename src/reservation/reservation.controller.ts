@@ -5,7 +5,9 @@ import {
   Body,
   Patch,
   Param,
-  Delete, UseGuards, Req,
+  Delete,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { ReservationService } from './reservation.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
@@ -18,21 +20,16 @@ export class ReservationController {
   constructor(private readonly reservationService: ReservationService) {}
 
   @Post()
-  async create(@Body() createReservationDto: CreateReservationDto) {
-    const { userId, bookId } = createReservationDto;
-    await this.reservationService.reserveBook(bookId, userId);
-    return 'reservation processed';}
-  //   @UseGuards(JwtAuthGuard)
-  // create(
-  //   @Body() createReservationDto: CreateReservationDto,
-  //   @User() user,
-  //   @Req() request: Request,
-  // ) {
-  //   const book = request['book'];
-  //   console.log('le book dans ce request est', book);
-  //   //return this.reservationService.create(createReservationDto);
-  // }
-  
+  @UseGuards(JwtAuthGuard)
+  async create(
+    @Body() createReservationDto: CreateReservationDto,
+    @User() user,
+    @Req() request: Request,
+  ) {
+    const { bookId } = createReservationDto;
+    await this.reservationService.reserveBook(bookId, user.id);
+    return 'reservation processed';
+  }
 
   @Get()
   findAll() {
