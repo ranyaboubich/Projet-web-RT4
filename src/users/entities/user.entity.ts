@@ -1,5 +1,6 @@
-import { IsEmail, IsString } from 'class-validator';
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Reservation } from 'src/reservation/entities/reservation.entity';
+import { WaitingList } from 'src/reservation/entities/waitingList.entity';
+import { Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 export class User {
   @PrimaryGeneratedColumn()
@@ -23,5 +24,11 @@ export class User {
   salt: string;
 
   @Column()
-  user: boolean;
+  admin: boolean;
+
+  @OneToMany(() => Reservation, (reservation) => reservation.user)
+  reservations: Reservation[];
+
+  @OneToMany(() => WaitingList, (waitingList) => waitingList.user)
+  waitingLists: WaitingList[];
 }
