@@ -39,10 +39,10 @@ export class ReservationService {
     }
   }
 
-  create(createReservationDto: CreateReservationDto): Promise<Reservation> {
-    const reservation = this.reservationRepository.create(createReservationDto);
-    return this.reservationRepository.save(reservation);
-  }
+  // create(createReservationDto: CreateReservationDto): Promise<Reservation> {
+  //   const reservation = this.reservationRepository.create(createReservationDto);
+  //   return this.reservationRepository.save(reservation);
+  // }
 
   findAll(): Promise<Reservation[]> {
     return this.reservationRepository.find();
@@ -50,13 +50,6 @@ export class ReservationService {
 
   findOne(id: number): Promise<Reservation> {
     return this.reservationRepository.findOne({ where: { id: id } });
-  }
-
-  async update(
-    id: number,
-    updateReservationDto: UpdateReservationDto,
-  ): Promise<void> {
-    await this.reservationRepository.update(id, updateReservationDto);
   }
 
   async remove(id: number): Promise<void> {

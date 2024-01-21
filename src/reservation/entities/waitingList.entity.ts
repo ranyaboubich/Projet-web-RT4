@@ -4,9 +4,9 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   CreateDateColumn,
-  OneToOne,
+  Entity,
 } from 'typeorm';
-
+@Entity()
 export class WaitingList {
   @PrimaryGeneratedColumn()
   id: number;

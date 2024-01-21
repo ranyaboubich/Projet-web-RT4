@@ -9,15 +9,16 @@ import {
 } from '@nestjs/common';
 import { ReservationService } from './reservation.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
-import { UpdateReservationDto } from './dto/update-reservation.dto';
 
 @Controller('reservation')
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) {}
 
   @Post()
-  create(@Body() createReservationDto: CreateReservationDto) {
-    return this.reservationService.create(createReservationDto);
+  async create(@Body() createReservationDto: CreateReservationDto) {
+    const { userId, bookId } = createReservationDto;
+    await this.reservationService.reserveBook(bookId, userId);
+    return 'reservation processed';
   }
 
   @Get()
@@ -28,14 +29,6 @@ export class ReservationController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.reservationService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateReservationDto: UpdateReservationDto,
-  ) {
-    return this.reservationService.update(+id, updateReservationDto);
   }
 
   @Delete(':id')

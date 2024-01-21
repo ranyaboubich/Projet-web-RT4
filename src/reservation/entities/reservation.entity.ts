@@ -1,7 +1,7 @@
 import { Book } from 'src/books/entities/book.entity';
 import { User } from 'src/users/entities/user.entity';
-import { ManyToOne, PrimaryGeneratedColumn, Column } from 'typeorm';
-
+import { ManyToOne, PrimaryGeneratedColumn, Column, Entity } from 'typeorm';
+@Entity()
 export class Reservation {
   @PrimaryGeneratedColumn()
   id: number;
