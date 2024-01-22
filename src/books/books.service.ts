@@ -37,22 +37,21 @@ export class BooksService {
 
       const waitingList = await this.waitingListRepository.find({
         where: { book: { id: id } },
+        relations: ['user'],
         order: { joinedAt: 'ASC' },
         take: updateBookDto.instances,
       });
 
-      console.log('je suis la waitingList',waitingList)
-      const allWaitingListItems = await this.waitingListRepository.find();
-      console.log('je suis la allwaitingList',allWaitingListItems)
+      console.log('je suis la waitingList', waitingList);
       //create reservation for the waitingList and remove from waitingList
-      allWaitingListItems.forEach(async (waiting) => {
-        if (waiting.user.id === undefined) return 'user not found';
+      waitingList.forEach(async (waiting) => {
         const reservation = this.reservationRepository.create({
           book: { id: id },
           user: { id: waiting.user.id },
           reservedAt: new Date(),
         });
-        console.log('je suis la reservation',reservation);
+        // ...
+
         await this.reservationRepository.save(reservation);
         await this.waitingListRepository.delete(waiting.id);
       });
