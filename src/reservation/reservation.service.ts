@@ -17,6 +17,20 @@ export class ReservationService {
   ) {}
 
   async reserveBook(bookId: number, userId: number) {
+    const existingReservation = await this.reservationRepository.findOne({
+      where: { book: { id: bookId }, user: { id: userId } },
+    });
+    if (existingReservation) {
+      throw new Error('Already reserved');
+    }
+
+    const existingWaitingList = await this.waitingListRepository.findOne({
+      where: { book: { id: bookId }, user: { id: userId } },
+    });
+    if (existingWaitingList) {
+      throw new Error("You're already in the waiting list");
+    }
+
     const book = await this.booksRepository.findOne({ where: { id: bookId } });
     if (book.instances > 0) {
       book.instances -= 1;

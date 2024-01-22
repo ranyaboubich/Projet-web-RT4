@@ -46,19 +46,37 @@ export class BooksService {
         take: updateBookDto.instances,
       });
 
-      console.log('je suis la waitingList', waitingList);
       //create reservation for the waitingList and remove from waitingList
-      waitingList.forEach(async (waiting) => {
-        const reservation = this.reservationRepository.create({
-          book: { id: id },
-          user: { id: waiting.user.id },
-          reservedAt: new Date(),
-        });
-        // ...
+      // waitingList.forEach(async (waiting) => {
+      //   const book = await this.booksRepository.findOne({ where: { id: id } });
+      //   book.instances -= 1;
+      //   await this.booksRepository.save(book);
+      //   const reservation = this.reservationRepository.create({
+      //     book: { id: id },
+      //     user: { id: waiting.user.id },
+      //     reservedAt: new Date(),
+      //   });
+      //   // ...
 
-        await this.reservationRepository.save(reservation);
-        await this.waitingListRepository.delete(waiting.id);
-      });
+      //   await this.reservationRepository.save(reservation);
+      //   await this.waitingListRepository.delete(waiting.id);
+      // });
+      for (const waiting of waitingList) {
+        const book = await this.booksRepository.findOne({ where: { id: id } });
+        if (book.instances > 0) {
+          book.instances -= 1;
+          await this.booksRepository.save(book);
+          const reservation = this.reservationRepository.create({
+            book: { id: id },
+            user: { id: waiting.user.id },
+            reservedAt: new Date(),
+          });
+          await this.reservationRepository.save(reservation);
+          await this.waitingListRepository.delete(waiting.id);
+        } else {
+          break;
+        }
+      }
     }
   }
 
