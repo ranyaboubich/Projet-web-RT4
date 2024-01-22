@@ -7,10 +7,10 @@ export class Reservation {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, (user) => user.reservations)
+  @ManyToOne(() => User, (user) => user.reservations, { onDelete: 'CASCADE' })
   user: User;
 
-  @ManyToOne(() => Book, (book) => book.reservations)
+  @ManyToOne(() => Book, (book) => book.reservations, { onDelete: 'CASCADE' })
   book: Book;
 
   @Column()

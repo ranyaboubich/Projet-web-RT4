@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateReservationDto } from './dto/create-reservation.dto';
-import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Reservation } from './entities/reservation.entity';
 import { Repository } from 'typeorm';
@@ -44,15 +42,22 @@ export class ReservationService {
   //   return this.reservationRepository.save(reservation);
   // }
 
-  findAll(): Promise<Reservation[]> {
-    return this.reservationRepository.find();
+  findAll(user): Promise<Reservation[]> {
+    if(user.isAdmin){
+      return this.reservationRepository.find({ relations: ['book', 'user'] });
+    }
+    return this.reservationRepository.find({ where: { user: user }, relations: ['book', 'user'] });
   }
 
-  findOne(id: number): Promise<Reservation> {
+  findOne(id: number, user): Promise<Reservation> {
+    if(user.isAdmin){
+      return this.reservationRepository.findOne({ where:{ id: id }, relations: ['book', 'user'] });
+    }
     return this.reservationRepository.findOne({ where: { id: id } });
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number): Promise<string> {
     await this.reservationRepository.delete(id);
+    return `La réservation d' id ${id} est supprimée`;
   }
 }

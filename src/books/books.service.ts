@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -27,7 +27,11 @@ export class BooksService {
   }
 
   async findOne(id: number): Promise<Book> {
-    return this.booksRepository.findOne({ where: { id: id } });
+     const book = await this.booksRepository.findOne({ where: { id: id } });
+      if (!book) {
+        throw new NotFoundException(`Book #${id} not found`);
+      }
+    return book;
   }
 
   async update(id: number, updateBookDto: UpdateBookDto): Promise<void> {
@@ -58,7 +62,12 @@ export class BooksService {
     }
   }
 
-  async remove(id: number): Promise<void> {
-    await this.booksRepository.delete(id);
+  async remove(id: number): Promise<string> {
+    const book = await this.booksRepository.findOne({ where: { id: id } });
+    if (!book) {
+      throw new NotFoundException(`Book #${id} not found`);
+    }
+    await  this.booksRepository.delete(id);
+    return `Book #${id} deleted`;
   }
 }
