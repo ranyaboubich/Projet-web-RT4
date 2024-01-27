@@ -24,8 +24,15 @@ export class Book {
   @Column('simple-array')
   keywords: string[];
 
+  @Column({ nullable: true })
+  coverImageUrl: string;
+
+  @Column({ type: 'text', nullable: true })
+  description: string;
+
   @Column()
   instances: number;
+
   @OneToMany(() => Review, (review) => review.book)
   reviews: Review[];
 

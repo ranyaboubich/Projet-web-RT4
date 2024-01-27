@@ -7,13 +7,13 @@ import {
   Param,
   Query,
 } from '@nestjs/common';
-import { ReviewsService } from './review.service';
+import { ReviewService } from './review.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { JwtAuthGuard } from '../auth/Guards/jwt-auth.guard';
 
 @Controller('reviews')
-export class ReviewsController {
-  constructor(private readonly reviewsService: ReviewsService) {}
+export class ReviewController {
+  constructor(private readonly reviewsService: ReviewService) {}
 
   @UseGuards(JwtAuthGuard)
   @Post()
