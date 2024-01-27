@@ -1,5 +1,7 @@
 import { Reservation } from 'src/reservation/entities/reservation.entity';
 import { WaitingList } from 'src/reservation/entities/waitingList.entity';
+import { Review } from '../../review/entities/review.entity';
+
 import { Column, OneToMany, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -27,6 +29,9 @@ export class User {
 
   @Column({ nullable: true })
   isAdmin: boolean;
+
+  @OneToMany(() => Review, (review) => review.user)
+  reviews: Review[];
 
   @OneToMany(() => Reservation, (reservation) => reservation.user)
   reservations: Reservation[];

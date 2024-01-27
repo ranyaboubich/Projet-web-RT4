@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -30,7 +30,7 @@ export class ReservationService {
       where: { book: { id: bookId }, user: { id: userId } },
     });
     if (existingWaitingList) {
-      throw new Error("You're already in the waiting list");
+      throw new Error('Already in waiting list');
     }
 
     const book = await this.booksRepository.findOne({ where: { id: bookId } });

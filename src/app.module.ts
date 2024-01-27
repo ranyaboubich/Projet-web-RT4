@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { BooksModule } from './books/books.module';
 import { ReservationModule } from './reservation/reservation.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ReviewModule } from './review/review.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       synchronize: true,
       logging: true,
     }),
+    ReviewModule,
   ],
   controllers: [AppController],
   providers: [AppService],

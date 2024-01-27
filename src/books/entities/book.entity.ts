@@ -1,5 +1,7 @@
 import { Reservation } from 'src/reservation/entities/reservation.entity';
 import { WaitingList } from 'src/reservation/entities/waitingList.entity';
+import { Review } from '../../review/entities/review.entity';
+
 import { Column, OneToMany, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -24,6 +26,8 @@ export class Book {
 
   @Column()
   instances: number;
+  @OneToMany(() => Review, (review) => review.book)
+  reviews: Review[];
 
   @OneToMany(() => Reservation, (reservation) => reservation.book)
   reservations: Reservation[];
