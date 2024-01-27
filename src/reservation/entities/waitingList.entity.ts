@@ -11,10 +11,10 @@ export class WaitingList {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, (user) => user.waitingLists)
+  @ManyToOne(() => User, (user) => user.waitingLists, { onDelete: 'CASCADE' })
   user: User;
 
-  @ManyToOne(() => Book, (book) => book.waitingLists)
+  @ManyToOne(() => Book, (book) => book.waitingLists,{ onDelete: 'CASCADE' })
   book: Book;
 
   @CreateDateColumn()

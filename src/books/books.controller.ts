@@ -5,26 +5,26 @@ import {
   Body,
   Patch,
   Param,
-  Delete, Req,
+  Delete, Req, UseGuards,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { AdminGuard } from '../auth/Guards/admin.guard';
+import { JwtAuthGuard } from '../auth/Guards/jwt-auth.guard';
 
 @Controller('books')
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard, AdminGuard)
   create(@Body() createBookDto: CreateBookDto) {
     return this.booksService.create(createBookDto);
   }
 
   @Get()
-  findAll(
-    @Req() request: Request,
-  ) {
-    console.log(request);
+  findAll() {
     return this.booksService.findAll();
   }
 
@@ -34,11 +34,13 @@ export class BooksController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
     return this.booksService.update(+id, updateBookDto);
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, AdminGuard)
   remove(@Param('id') id: string) {
     return this.booksService.remove(+id);
   }
