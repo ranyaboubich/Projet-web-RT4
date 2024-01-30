@@ -4,4 +4,6 @@ export class CreateBookDto {
   author: string;
   description: string;
   coverImageUrl: string;
+  keywords: string[];
+  instances: number;
 }

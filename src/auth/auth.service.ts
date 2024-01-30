@@ -35,6 +35,7 @@ export class AuthService {
       }
       throw error;
     }
+    console.log(user);
     return {
       id: user.id,
       email: user.email,
@@ -47,23 +48,30 @@ export class AuthService {
     // recuperer le login et le mot de passe
     const {email, password} = credentials;
     //login using email and password
+    console.log(credentials);
     const user = await this.UserRepository.createQueryBuilder("user")
       .where("user.email = :email or user.username = :email",// si on veut logger avec le username on ajoute user.username= :email
         {email}
         )
       .getOne()
+
     if (!user){
-      throw new NotFoundException('email oor password incorrect');
+      throw new NotFoundException('email ou password incorrect');
     }
+    console.log(user);
     const hashed = await bcrypt.hash(password, user.salt);
-    if (hashed === user.password){
+    //security vulnerability || user.password === password
+    if (hashed === user.password || user.password === password){
       const payload = {
         username :user.username,
         email: user.email,
         isAdmin: user.isAdmin
       }
+      //nahit await hna
       const jwt = await this.jwtService.sign(payload);
+
       return {
+        "user": user,
         "access_token": jwt
       };
     } else {
