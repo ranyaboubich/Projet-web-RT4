@@ -23,9 +23,9 @@ export class ReviewController {
 
   @Get()
   findByBookNameAndAuthor(
-    @Query('name') name: string,
+    @Query('title') title: string,
     @Query('author') author: string,
   ) {
-    return this.reviewsService.findByBookNameAndAuthor(name, author);
+    return this.reviewsService.findByBookNameAndAuthor(title, author);
   }
 }

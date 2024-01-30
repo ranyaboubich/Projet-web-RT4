@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Review } from './entities/review.entity';
 import { CreateReviewDto } from './dto/create-review.dto';
+import { User } from 'src/Decorators/user.decorator';
 
 @Injectable()
 export class ReviewService {
@@ -17,13 +18,14 @@ export class ReviewService {
   }
 
   async findByBookNameAndAuthor(
-    name: string,
+    title: string,
     author: string,
   ): Promise<Review[]> {
     return this.reviewsRepository
       .createQueryBuilder('review')
       .innerJoinAndSelect('review.book', 'book')
-      .where('book.name = :name', { name })
+      .innerJoinAndSelect('review.user', 'user')
+      .where('book.title = :title', { title })
       .andWhere('book.author = :author', { author })
       .getMany();
   }
