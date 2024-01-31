@@ -27,10 +27,17 @@ export class UsersService {
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<string> {
     const user = await this.usersRepository.findOne({ where: { id: id } });
+    if(!user){
+      return `User id ${id} not found`;
+    }
     if (updateUserDto.password) {
       updateUserDto.password = await bcrypt.hash(updateUserDto.password, user.salt);
     }
-    await this.usersRepository.update(id, updateUserDto);
+    const user1 = await this.usersRepository.preload({
+      id: id,
+      ...updateUserDto,
+    });
+    await this.usersRepository.save(user1);
     return 'User updated'
   }
 

@@ -10,15 +10,21 @@ import {
 import { ReviewService } from './review.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { JwtAuthGuard } from '../auth/Guards/jwt-auth.guard';
+import { User } from '../Decorators/user.decorator';
 
 @Controller('reviews')
 export class ReviewController {
   constructor(private readonly reviewsService: ReviewService) {}
 
   @UseGuards(JwtAuthGuard)
-  @Post()
-  create(@Body() createReviewDto: CreateReviewDto) {
-    return this.reviewsService.create(createReviewDto);
+  @Post(':id')
+  create(
+    @Body() createReviewDto: CreateReviewDto,
+    @Param('id') bookId: number,
+    @User() user
+  ) {
+    const userId = user.id;
+    return this.reviewsService.create( user,bookId, createReviewDto);
   }
 
   @Get()

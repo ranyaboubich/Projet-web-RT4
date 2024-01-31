@@ -4,17 +4,25 @@ import { Repository } from 'typeorm';
 import { Review } from './entities/review.entity';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { User } from 'src/Decorators/user.decorator';
+import { Book } from '../books/entities/book.entity';
 
 @Injectable()
 export class ReviewService {
   constructor(
     @InjectRepository(Review)
     private reviewsRepository: Repository<Review>,
+    @InjectRepository(Book)
+    private bookRepository: Repository<Book>,
   ) {}
 
-  async create(createReviewDto: CreateReviewDto): Promise<Review> {
-    const review = this.reviewsRepository.create(createReviewDto);
-    return this.reviewsRepository.save(review);
+  async create(user, bookId, createReviewDto)  {
+    const book = await this.bookRepository.findOne({ where: { id: bookId } });
+    const review = this.reviewsRepository.create({
+      ...createReviewDto,
+      user,
+      book,
+    });
+   await this.reviewsRepository.save(review);
   }
 
   async findByBookNameAndAuthor(
