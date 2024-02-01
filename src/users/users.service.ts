@@ -25,10 +25,10 @@ export class UsersService {
     return this.usersRepository.findOne({ where: { id: id } });
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<string> {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.usersRepository.findOne({ where: { id: id } });
     if(!user){
-      return `User id ${id} not found`;
+      throw new Error(`User id ${id} not found`);
     }
     if (updateUserDto.password) {
       updateUserDto.password = await bcrypt.hash(updateUserDto.password, user.salt);
@@ -37,8 +37,7 @@ export class UsersService {
       id: id,
       ...updateUserDto,
     });
-    await this.usersRepository.save(user1);
-    return 'User updated'
+    return await this.usersRepository.save(user1);
   }
 
   async updateAnyUser(id: number, updateUserDto: UpdateUserDto){
@@ -46,8 +45,7 @@ export class UsersService {
     if (updateUserDto.password) {
       updateUserDto.password = await bcrypt.hash(updateUserDto.password, user.salt);
     }
-    await this.usersRepository.update(id, updateUserDto);
-    return `User id ${id} updated`;
+    return await this.usersRepository.update(id, updateUserDto);
   }
 
   async remove(id: number): Promise<string> {

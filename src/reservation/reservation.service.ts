@@ -23,14 +23,14 @@ export class ReservationService {
       where: { book: { id: bookId }, user: { id: userId } },
     });
     if (existingReservation) {
-      throw new Error('Already reserved');
+      throw new HttpException('Already reserved', HttpStatus.BAD_REQUEST);
     }
 
     const existingWaitingList = await this.waitingListRepository.findOne({
       where: { book: { id: bookId }, user: { id: userId } },
     });
     if (existingWaitingList) {
-      throw new Error('Already in waiting list');
+      throw new HttpException('Already in waiting list', HttpStatus.BAD_REQUEST);
     }
 
     const book = await this.booksRepository.findOne({ where: { id: bookId } });
@@ -81,5 +81,16 @@ export class ReservationService {
   async remove(id: number): Promise<string> {
     await this.reservationRepository.delete(id);
     return `La réservation d' id ${id} est supprimée`;
+  }
+
+  findAllWaitingList(user): Promise<WaitingList[]> {
+    if (user.isAdmin) {
+      return this.waitingListRepository.find({ relations: ['book', 'user'] });
+    }
+    return this.waitingListRepository.find({
+      where: { user: user },
+      relations: ['book', 'user'],
+    });
+
   }
 }

@@ -22,7 +22,7 @@ export class ReviewService {
       user,
       book,
     });
-   await this.reviewsRepository.save(review);
+   return await this.reviewsRepository.save(review);
   }
 
   async findByBookNameAndAuthor(

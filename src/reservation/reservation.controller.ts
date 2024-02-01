@@ -22,13 +22,11 @@ export class ReservationController {
   @Post(':id')
   @UseGuards(JwtAuthGuard)
   async create(
-    @Body() createReservationDto: CreateReservationDto,
     @User() user,
     @Param('id', ParseIntPipe) bookId: number,
   ) {
-    await this.reservationService.reserveBook(bookId, user.id);
-    //console.log('je suis admin', user.isAdmin)
-    return user;
+    return await this.reservationService.reserveBook(bookId, user.id);
+    //return user;
   }
 
   @Get()
@@ -37,6 +35,14 @@ export class ReservationController {
     @User() user
   ) {
     return this.reservationService.findAll(user);
+  }
+
+  @Get('waiting-list')
+  @UseGuards(JwtAuthGuard)
+  findAllWaitingList(
+    @User() user
+  ) {
+    return this.reservationService.findAllWaitingList(user);
   }
 
   @Get(':id')
