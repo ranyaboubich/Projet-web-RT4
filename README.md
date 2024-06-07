@@ -1,7 +1,7 @@
 # 📚 Library Club Backend
 
 Welcome to the Library Club backend project! This is a NestJS-based backend service for managing the operations of a library club, including user authentication, book catalog management, borrowing records, and more. <br>
-**🔗 Frontend Repository Link**: [](https://github.com/ranyaboubich/Projet-Angular-second)
+**🔗 Frontend Repository Link**: https://github.com/ranyaboubich/Projet-Angular-second
 
 ## 🚀 Features
 
